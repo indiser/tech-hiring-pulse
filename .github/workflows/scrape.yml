@@ -8,6 +8,8 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       BRIGHTDATA_API_KEY: ${{ secrets.BRIGHTDATA_API_KEY }}
     steps:
