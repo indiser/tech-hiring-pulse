@@ -8,6 +8,8 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    env:
+      BRIGHTDATA_API_KEY: ${{ secrets.BRIGHTDATA_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,10 +22,7 @@ jobs:
           python-version: '3.11'
 
       - name: Run scraper
-        env:
-          BRIGHTDATA_API_TOKEN: ${{ secrets.BRIGHTDATA_API_TOKEN }}
-        run: |
-          npx -p @brightdata/cli bdata scraper run c_mt5evkhh7xjyn2fi0 https://www.instahyre.com/search --pretty > jobs.json
+        run: npx --yes --package @brightdata/cli brightdata scraper run c_mt5evkhh7xjyn2fi0 https://www.instahyre.com/search --pretty > jobs.json
 
       - name: Update database
         run: python pipeline.py
@@ -32,6 +31,6 @@ jobs:
         run: |
           git config user.name "indiser"
           git config user.email "banerjeerana74@gmail.com"
-          git add .
+          git add jobs.db
           git commit -m "Daily scrape update" || echo "No changes"
           git push
